@@ -12,7 +12,16 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Define the Car struct
+///////////////////////////////////////////////////////////////////////////////
+typedef struct {
+    int x, y;       // Position
+    int w, h;       // Size
+    int speed;      // Speed for movement
+} Car;
 
+Car car; // Declare the car as a global variable
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function to initialize our SDL window
@@ -57,6 +66,19 @@ void process_input(void) {
                     game_is_running = false;
                 }
                 break;
+                // Get the current state of the keyboard
+                const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+                // Move the car left (A key) or right (D key)
+                if (state[SDL_SCANCODE_A]) {
+                    printf("A key pressed\n");
+                    car.x -= car.speed;
+                }
+                if (state[SDL_SCANCODE_D]) {
+                    printf("D key pressed\n");
+                    car.x += car.speed;
+                }
+                break;
         }
     }
 }
@@ -66,12 +88,22 @@ void process_input(void) {
 ///////////////////////////////////////////////////////////////////////////////
 void setup(void) {
 
+    // Initialize car properties
+    car.x = WINDOW_WIDTH / 2 - 25; // Center horizontally
+    car.y = WINDOW_HEIGHT - 300;  // Near the bottom
+    car.w = 50;                   // Width of the car
+    car.h = 100;                  // Height of the car
+    car.speed = 10;               // Speed for sideways movement
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Update function with a fixed time step
 ///////////////////////////////////////////////////////////////////////////////
 void update(void) {
+    // Ensure car stays within screen bounds
+    if (car.x < 0) car.x = 0;
+    if (car.x > WINDOW_WIDTH - car.w) car.x = WINDOW_WIDTH - car.w;
 
 }
 
@@ -81,6 +113,11 @@ void update(void) {
 void render(void) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
+    // Draw the car
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red car
+    SDL_Rect car_rect = {car.x, car.y, car.w, car.h};
+    SDL_RenderFillRect(renderer, &car_rect);
 
     SDL_RenderPresent(renderer);
 }
