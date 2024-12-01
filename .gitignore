@@ -3,3 +3,4 @@ game.exe
 src/
 SDL2.dll
 SDL2_image.dll
+SDL2_ttf.dll
