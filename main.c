@@ -21,7 +21,6 @@ typedef struct {
     int speed;      
 } Car;
 
-Car car; 
 Car player;
 Car traffic[TRAFFIC_COUNT];
 
@@ -84,8 +83,8 @@ void process_input(void) {
                 if (state[SDL_SCANCODE_D]) player.x += player.speed;
 
                 // Ensure player stays within bounds
-                if (player.x < 0) player.x = 0;
-                if (player.x > WINDOW_WIDTH - player.w) player.x = WINDOW_WIDTH - player.w;
+                if (player.x < 160) player.x = 160;
+                if (player.x > 480 - player.w) player.x = 480 - player.w;
                 break;
         }
     }
@@ -111,11 +110,15 @@ void setup(void) {
 
     // Initialize traffic cars
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
-        traffic[i].x = rand() % (WINDOW_WIDTH - CAR_WIDTH);
-        traffic[i].y = -(rand() % 300 + 100); // Spawn off-screen
-        traffic[i].w = CAR_WIDTH;
-        traffic[i].h = CAR_HEIGHT;
-        traffic[i].speed = rand() % 5 + 3; // Random speed
+        int temp_pos = ROAD_START +(rand() % (ROAD_END - CAR_WIDTH));
+        if(temp_pos - CAR_WIDTH < ROAD_END && temp_pos > ROAD_START ){
+            traffic[i].x = temp_pos;
+            traffic[i].y = -(rand() % 300 + 100); // Spawn off-screen
+            traffic[i].w = CAR_WIDTH;
+            traffic[i].h = CAR_HEIGHT;
+            traffic[i].speed = rand() % 5 + 3; // Random speed
+        }
+
     }
 
 }
@@ -129,13 +132,17 @@ void update(void) {
 
     // Move traffic cars
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
+        int temp_pos = ROAD_START+(rand() % (ROAD_END - CAR_WIDTH));
         traffic[i].y += traffic[i].speed;
-
         // Respawn car if it moves off-screen
         if (traffic[i].y > WINDOW_HEIGHT) {
-            traffic[i].x = rand() % (WINDOW_WIDTH - CAR_WIDTH);
-            traffic[i].y = -(rand() % 300 + 100);
-            traffic[i].speed = rand() % 5 + 3;
+            if( temp_pos - CAR_WIDTH < ROAD_END && temp_pos > ROAD_START ){
+                traffic[i].x = temp_pos;
+                //traffic[i].x = rand() % (WINDOW_WIDTH - CAR_WIDTH);
+                traffic[i].y = -(rand() % 300 + 100);
+                traffic[i].speed = rand() % 5 + 3;
+            }
+
         }
 
         // Check collision
