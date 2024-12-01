@@ -5,6 +5,10 @@
 #define WINDOW_HEIGHT 600
 
 #define FPS 30
-#define FRAME_TARGET_TIME (1000 / FPS)
+#define FRAME_DELAY (1000 / FPS)
+
+#define CAR_WIDTH 50
+#define CAR_HEIGHT 100
+#define TRAFFIC_COUNT 5
 
 #endif

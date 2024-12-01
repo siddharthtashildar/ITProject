@@ -10,7 +10,7 @@ INCLUDE_DIR = ./src/include
 
 # Compiler Flags
 CFLAGS = -I$(INCLUDE_DIR)
-LDFLAGS = -L$(LIB_DIR) -lmingw32 -lSDL2main -lSDL2
+LDFLAGS = -L$(LIB_DIR) -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 # LDFLAGS = -L$(LIB_DIR) -lSDL2 -lSDL2main
 # LDFLAGS = -L$(LIB_DIR) -lSDL2 -lSDL2main
 
