@@ -13,4 +13,9 @@
 #define CAR_HEIGHT 100
 #define TRAFFIC_COUNT 4
 
+#define TREE_COUNT 5
+#define TREE_WIDTH 60
+#define TREE_HEIGHT 60
+
+
 #endif

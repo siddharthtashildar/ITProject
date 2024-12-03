@@ -37,3 +37,16 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+
+    // Initialize traffic cars
+    // for (int i = 0; i < TRAFFIC_COUNT; i++) {
+    //     int temp_pos = ROAD_START +(rand() % (ROAD_END - CAR_WIDTH));
+    //     if(temp_pos - CAR_WIDTH < ROAD_END && temp_pos > ROAD_START ){
+    //         traffic[i].x = temp_pos;
+    //         traffic[i].y = -(rand() % 300 + 100); // Spawn off-screen
+    //         traffic[i].w = CAR_WIDTH;
+    //         traffic[i].h = CAR_HEIGHT;
+    //         traffic[i].speed = rand() % 5 + 3; // Random speed
+    //     }
+
+    // }
