@@ -6,7 +6,7 @@
 #include <SDL2/SDL_image.h> 
 #include <SDL2/SDL_ttf.h>
 
-// Global variables
+
 int game_is_running = false;
 int last_frame_time = 0;
 SDL_Window *window = NULL;
@@ -18,7 +18,7 @@ SDL_Texture *TrafficTexture = NULL;
 
 int score = 0;
 
-// Define the Car struct
+
 typedef struct {
     int x, y;       
     int w, h;       
@@ -61,19 +61,19 @@ int initialize_window(void) {
 }
 
 SDL_Texture* load_texture(const char *file_path) {
-    SDL_Surface *surface = IMG_Load(file_path); // Load the image file
+    SDL_Surface *surface = IMG_Load(file_path); 
     if (!surface) {
         printf("Error loading image: %s\n", IMG_GetError());
         return NULL;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface); // Free the surface after creating texture
+    SDL_FreeSurface(surface); 
     return texture;
 }
 
 
-// Function to poll SDL events and process keyboard input
+
 void process_input(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -89,8 +89,10 @@ void process_input(void) {
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
                 if (state[SDL_SCANCODE_A]) player.x -= player.speed;
                 if (state[SDL_SCANCODE_D]) player.x += player.speed;
+                if (state[SDL_SCANCODE_LEFT]) player.x -= player.speed;
+                if (state[SDL_SCANCODE_RIGHT]) player.x += player.speed;
 
-                // Ensure player stays within bounds
+              
                 if (player.x < 160) player.x = 160;
                 if (player.x > 480 - player.w) player.x = 480 - player.w;
                 break;
@@ -103,12 +105,12 @@ bool check_collision(Car a, Car b) {
 }
 
 
-// Setup function that runs once at the beginning of our program
+
 void setup(void) {
 
     srand(time(0));
-    // Load the background image
-    background_texture = load_texture("assets\\bg.bmp"); // Replace with your image path
+    
+    background_texture = load_texture("assets\\bg.bmp"); 
     if (!background_texture) {
         printf("Failed to load background image.\n");
         game_is_running = false;
@@ -127,7 +129,7 @@ void setup(void) {
         game_is_running = false;
     }
 
-    // Initialize player car
+    
     player.x = WINDOW_WIDTH / 2 - CAR_WIDTH / 2;
     player.y = WINDOW_HEIGHT - CAR_HEIGHT - 20;
     player.w = CAR_WIDTH;
@@ -149,7 +151,7 @@ void setup(void) {
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
         int valid_position = 0;
         while (!valid_position) {
-            valid_position = 1; // Assume the position is valid
+            valid_position = 1; 
             int temp_pos = ROAD_START + (rand() % (ROAD_END - CAR_WIDTH));
             traffic[i].x = temp_pos;
             traffic[i].y = -(rand() % 300 + 100);
@@ -157,10 +159,10 @@ void setup(void) {
             traffic[i].h = CAR_HEIGHT;
             traffic[i].speed = rand() % 5 + 3;
 
-            // Check for overlaps with other traffic cars
+            
             for (int j = 0; j < i; j++) {
                 if (check_collision(traffic[i], traffic[j])) {
-                    valid_position = 0; // Overlap found, retry
+                    valid_position = 0; 
                     break;
                 }
             }
@@ -170,14 +172,14 @@ void setup(void) {
 }
 
 
-// Update function with a fixed time step
+
 void update(void) {
 
-    // Move traffic cars
+
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
         int temp_pos = ROAD_START+(rand() % (ROAD_END - CAR_WIDTH));
         traffic[i].y += traffic[i].speed;
-        // Respawn car if it moves off-screen
+       
         if (traffic[i].y > WINDOW_HEIGHT) {
             score += 10;
             if( temp_pos - CAR_WIDTH < ROAD_END && temp_pos > ROAD_START ){
@@ -188,7 +190,7 @@ void update(void) {
             }
 
         }
-        // Check collision
+    
         if (check_collision(player, traffic[i])) {
             
             printf("Game Over!\n");
@@ -211,21 +213,20 @@ void update(void) {
 
 }
 
-// Render the score on the screen
+
 void render_score(void) {
-    // Set the font and size
-    TTF_Font *font = TTF_OpenFont("assets\\RetroGaming.ttf", 24); // Replace with your font file path
+   
+    TTF_Font *font = TTF_OpenFont("assets\\RetroGaming.ttf", 24); 
     if (!font) {
         printf("Error loading font: %s\n", TTF_GetError());
         return;
     }
 
-    // Set the score text
     char score_text[50];
     sprintf(score_text, "Score: %d", score);
 
-    // Create the text surface
-    SDL_Color white = {255, 255, 255, 255}; // White color
+   
+    SDL_Color white = {255, 255, 255, 255};
     SDL_Surface *surface = TTF_RenderText_Solid(font, score_text, white);
     if (!surface) {
         printf("Error creating text surface: %s\n", TTF_GetError());
@@ -233,7 +234,7 @@ void render_score(void) {
         return;
     }
 
-    // Convert the surface to a texture
+    
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     if (!texture) {
@@ -242,29 +243,29 @@ void render_score(void) {
         return;
     }
 
-    // Set the destination rectangle for the text
-    SDL_Rect dest_rect = {600, 10, 150, 30}; // Position and size of the score display
+    
+    SDL_Rect dest_rect = {600, 10, 150, 30};
     SDL_RenderCopy(renderer, texture, NULL, &dest_rect);
 
-    // Clean up
+    
     SDL_DestroyTexture(texture);
     TTF_CloseFont(font);
 }
 
-// Render function to draw game objects in the SDL window
+
 void render(void) {
 
-    // Render the background
+    
     SDL_RenderCopy(renderer, background_texture, NULL, NULL);
 
     render_score();
-    // Draw player car
+    
     //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green player
     SDL_Rect player_rect = {player.x, player.y, player.w, player.h};
     //SDL_RenderFillRect(renderer, &player_rect);
     SDL_RenderCopy(renderer,PlayerTexture,NULL,&player_rect);
 
-    // Draw traffic cars
+    
     //SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red traffic
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
         SDL_Rect traffic_rect = {traffic[i].x, traffic[i].y, traffic[i].w, traffic[i].h};
@@ -276,7 +277,7 @@ void render(void) {
 }
 
 
-// Function to destroy SDL window and renderer
+
 void destroy_window(void) {
     if (background_texture) {
         SDL_DestroyTexture(background_texture);
@@ -294,7 +295,7 @@ void destroy_window(void) {
 }
 
 
-// Main function
+
 int main(int argc, char* args[]) {
     game_is_running = initialize_window();
 

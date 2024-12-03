@@ -11,6 +11,6 @@
 
 #define CAR_WIDTH 50
 #define CAR_HEIGHT 100
-#define TRAFFIC_COUNT 3
+#define TRAFFIC_COUNT 4
 
 #endif
