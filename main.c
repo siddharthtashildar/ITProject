@@ -11,7 +11,10 @@ int game_is_running = false;
 int last_frame_time = 0;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Texture *background_texture = NULL; // Texture for the background
+
+SDL_Texture *background_texture = NULL;
+SDL_Texture *PlayerTexture = NULL;
+SDL_Texture *TrafficTexture = NULL;
 
 int score = 0;
 
@@ -110,6 +113,20 @@ void setup(void) {
         printf("Failed to load background image.\n");
         game_is_running = false;
     }
+
+    PlayerTexture = load_texture("assets\\playerCar.png");
+
+    if(!PlayerTexture){
+        printf("Failed to load Player Car Texture.\n");
+        game_is_running = false;
+    }
+
+    TrafficTexture = load_texture("assets\\trafficCar.png");
+    if(!TrafficTexture){
+        printf("Failed to load Traffic Car Texture.\n");
+        game_is_running = false;
+    }
+
     // Initialize player car
     player.x = WINDOW_WIDTH / 2 - CAR_WIDTH / 2;
     player.y = WINDOW_HEIGHT - CAR_HEIGHT - 20;
@@ -242,15 +259,17 @@ void render(void) {
 
     render_score();
     // Draw player car
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green player
+    //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green player
     SDL_Rect player_rect = {player.x, player.y, player.w, player.h};
-    SDL_RenderFillRect(renderer, &player_rect);
+    //SDL_RenderFillRect(renderer, &player_rect);
+    SDL_RenderCopy(renderer,PlayerTexture,NULL,&player_rect);
 
     // Draw traffic cars
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red traffic
+    //SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red traffic
     for (int i = 0; i < TRAFFIC_COUNT; i++) {
         SDL_Rect traffic_rect = {traffic[i].x, traffic[i].y, traffic[i].w, traffic[i].h};
-        SDL_RenderFillRect(renderer, &traffic_rect);
+        //SDL_RenderFillRect(renderer, &traffic_rect);
+        SDL_RenderCopy(renderer,TrafficTexture,NULL,&traffic_rect);
     }
     
     SDL_RenderPresent(renderer);
@@ -261,6 +280,12 @@ void render(void) {
 void destroy_window(void) {
     if (background_texture) {
         SDL_DestroyTexture(background_texture);
+    }
+    if(PlayerTexture){
+        SDL_DestroyTexture(PlayerTexture);
+    }
+    if(TrafficTexture){
+        SDL_DestroyTexture(TrafficTexture);
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
