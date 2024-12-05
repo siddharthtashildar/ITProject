@@ -160,7 +160,7 @@ void render_game_over() {
     // Retry or Exit Text
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
-    surface = TTF_RenderText_Solid(font, "Press R to Retry or ESC to Exit", red);
+    surface = TTF_RenderText_Solid(font, "Press R or ENTER to Retry or ESC to Exit", red);
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_Rect retry_rect = {150, 500, 500, 50};
     SDL_RenderCopy(renderer, texture, NULL, &retry_rect);
@@ -199,7 +199,7 @@ void process_input(void) {
 }
 
 void process_game_over_input() {
-    printf("In Process Input Function\n");
+    // printf("In Process Input Function\n");
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -216,6 +216,10 @@ void process_game_over_input() {
                     printf("R key detected!\n");
                     current_state = GAME_RETRY;
                 };
+                if(state[SDL_SCANCODE_RETURN]){
+                    printf("Enter key detected!\n");
+                    current_state = GAME_RETRY;  
+                }
 
                 break;
         }
