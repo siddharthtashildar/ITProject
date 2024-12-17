@@ -3,7 +3,7 @@
 # Step I - 
 Clone this repo in your machine.
 
-```git clone <link-here>```
+```git clone https://github.com/siddharthtashildar/ITProject.git```
 
 # Step II - 
 paste the suitable Libraries files in the main repo from the gdrive link below.(paste only src folder and dll files)
